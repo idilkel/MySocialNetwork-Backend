@@ -14,4 +14,6 @@ public class MapConfig {
     public Map<UUID, Information> map() {
         return new HashMap<>();
     }
+
+    
 }

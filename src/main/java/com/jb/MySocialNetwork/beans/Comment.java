@@ -9,15 +9,15 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "messages")
+@Table(name = "comments")
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 @Builder
-public class Message {
+public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     private LocalDateTime time;
 
@@ -28,6 +28,5 @@ public class Message {
     private User sender;
 
     @ManyToOne
-    //@JoinColumn(name = "receiver")
-    private User receiver;
+    private Post post;
 }

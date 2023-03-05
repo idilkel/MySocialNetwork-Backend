@@ -1,9 +1,12 @@
 package com.jb.MySocialNetwork.controllers;
 
+import com.jb.MySocialNetwork.beans.Comment;
 import com.jb.MySocialNetwork.beans.Post;
+import com.jb.MySocialNetwork.beans.User;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkSecurityException;
 import com.jb.MySocialNetwork.security.TokenManager;
+import com.jb.MySocialNetwork.service.CommentService;
 import com.jb.MySocialNetwork.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -19,12 +22,14 @@ import java.util.UUID;
 public class UserController {
     private final UserService userService;
     private final TokenManager tokenManager;
+    private final CommentService commentService;
+
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     long addFriend(@RequestHeader("Authorization") UUID token, long newFriendId) throws SocialNetworkException, SocialNetworkSecurityException {
         long userId = tokenManager.getUserId(token);
-        return userService.addFriend(userId, newFriendId);
+        return userService.addFriend(userId, (long) newFriendId);
     }
 
     @GetMapping("/posts/mine")
@@ -42,7 +47,7 @@ public class UserController {
     @DeleteMapping("/friendship")
     void deleteFriend(@RequestHeader("Authorization") UUID token, long friendId) throws SocialNetworkException, SocialNetworkSecurityException {
         long userId = tokenManager.getUserId(token);
-        userService.deleteFriend(userId, friendId);
+        userService.deleteFriend(userId, (long) friendId);
     }
 
     @PutMapping("/picture")
@@ -59,4 +64,55 @@ public class UserController {
         userService.addNewPost(userId, post);
         return post;
     }
+
+    @GetMapping("/mail")
+    User getUserByMail(@RequestHeader("Authorization") UUID token, String email) throws SocialNetworkSecurityException, SocialNetworkException {
+        long userId = tokenManager.getUserId(token);
+        User user = userService.getUserByMail(userId, email);
+        return user;
+    }
+
+    @GetMapping("/name")
+    List<User> getUserByName(@RequestHeader("Authorization") UUID token, String name) throws SocialNetworkSecurityException, SocialNetworkException {
+        long userId = tokenManager.getUserId(token);
+        List<User> users = userService.getUserByFirstNameOrLastName(userId, name);
+        return users;
+    }
+
+    @PostMapping("/{postId}/comment")
+    @ResponseStatus(HttpStatus.CREATED)
+    Comment addNewComment(@RequestHeader("Authorization") UUID token, @PathVariable long postId, @RequestBody String msg) throws SocialNetworkSecurityException, SocialNetworkException {
+        long userId = tokenManager.getUserId(token);
+        Comment comment = commentService.addComment(userId, postId, msg);
+        return comment;
+    }
+
+//    @GetMapping("/comments")
+//    List<User> getAllComments(@RequestHeader("Authorization") UUID token, String name) throws SocialNetworkSecurityException, SocialNetworkException {
+//        long userId = tokenManager.getUserId(token);
+//        List<User> users = userService.getUserByFirstNameOrLastName(userId, name);
+//        return users;
+//    }
+
+    @GetMapping("/{postId}/comment")
+    List<Comment> getAllCommentsOfOnePost(@RequestHeader("Authorization") UUID token, @PathVariable long postId) throws SocialNetworkSecurityException, SocialNetworkException {
+        long userId = tokenManager.getUserId(token);
+        List<Comment> comments = commentService.getAllCommentsOfOnePost(userId, postId);
+        return comments;
+    }
+
+//    @PostMapping("/increase-like")
+//    @ResponseStatus(HttpStatus.CREATED)
+//    void increaseLike(@RequestHeader("Authorization") UUID token, @RequestBody Post post) throws SocialNetworkSecurityException, SocialNetworkException {
+//        long userId = tokenManager.getUserId(token);
+//        userService.increaseLike(userId, post);
+//    }
+
+    @PostMapping("/increase-like")
+    @ResponseStatus(HttpStatus.CREATED)
+    void increaseLike(@RequestHeader("Authorization") UUID token, @RequestBody Post post) throws SocialNetworkSecurityException, SocialNetworkException {
+        long userId = tokenManager.getUserId(token);
+        userService.increaseLike(userId, post);
+    }
+
 }

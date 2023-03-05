@@ -1,9 +1,11 @@
 package com.jb.MySocialNetwork.service;
 
+import com.jb.MySocialNetwork.beans.Like;
 import com.jb.MySocialNetwork.beans.Post;
 import com.jb.MySocialNetwork.beans.User;
 import com.jb.MySocialNetwork.exceptions.ErrMsg;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
+import com.jb.MySocialNetwork.repos.LikesRepository;
 import com.jb.MySocialNetwork.repos.PostRepository;
 import com.jb.MySocialNetwork.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final LikesRepository likesRepository;
 
 
     @Override
@@ -62,7 +65,7 @@ public class UserServiceImpl implements UserService {
             throw new SocialNetworkException(ErrMsg.CANNOT_ADD_OR_REMOVE_USER1);
         }
         if (userRepository.existsFriendship(userId, newFriendId) == 0) {
-            throw new SocialNetworkException(ErrMsg.FRIENDSHIP_DOESNT_EXISTS);
+            throw new SocialNetworkException(ErrMsg.FRIENDSHIP_DOESNT_EXIST);
         }
         User user = userRepository.findById(userId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
         User newFriend = userRepository.findById(newFriendId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
@@ -103,5 +106,49 @@ public class UserServiceImpl implements UserService {
         return post;
     }
 
+    @Override
+    public User getUserByMail(long userId, String email) throws SocialNetworkException {
+        return userRepository.findByEmail(email).orElseThrow(() -> new SocialNetworkException(ErrMsg.EMAIL_DOES_NOT_EXIST_EXCEPTION));
+    }
 
+    @Override
+    public User getUserById(long userId) throws SocialNetworkException {
+        return userRepository.findById(userId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
+    }
+
+    @Override
+    public List<User> getUserByFirstNameOrLastName(long userId, String name) throws SocialNetworkException {
+        return userRepository.findByFirstNameOrLastName(name, name);
+    }
+
+    @Override
+    public Post getOnePostByPostId(long userId, long postId) throws SocialNetworkException {
+        return postRepository.findById(postId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
+    }
+
+//    @Override
+//    public void increaseLike(long userId, Post post) {
+//        post.setLikes(post.getLikes() + 1);
+//
+//    }
+
+    @Override
+    public void increaseLike(long userId, Post post) {
+        boolean isLikeExists = false;
+        if (likesRepository.likeExists(userId, post.getId()) == 1) {
+            isLikeExists = true;
+        }
+        System.out.println(isLikeExists);
+        if (!isLikeExists) {
+            List<Like> likeList = post.getLikesList();
+            System.out.println(likeList);
+            Like newLike = Like.builder().likingUserId(userId).post(post).build();
+            likeList.add(newLike);
+            likesRepository.save(newLike);
+            post.setLikes(post.getLikes() + 1);
+            post.setLikesList(likeList);
+            System.out.println(post);
+            postRepository.saveAndFlush(post);
+        }
+    }
 }

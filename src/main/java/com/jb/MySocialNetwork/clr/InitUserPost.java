@@ -28,9 +28,9 @@ public class InitUserPost implements CommandLineRunner {
     public void run(String... args) throws Exception {
 
         User admin = User.builder().firstName("admin").lastName("admin").type(UserType.admin).email("admin@admin.com").password("admin").build();
-        User user1 = User.builder().firstName("Idil").lastName("Kasuto Kelson").email("idil@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1972, 11, 29)).picture("IdilPic").build();
-        User user2 = User.builder().firstName("Ido").lastName("Kelson").email("ido@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1971, 9, 25)).picture("IdoPic").build();
-        User user3 = User.builder().firstName("Eithan").lastName("Kelson").email("eithan@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2002, 9, 13)).picture("EithanPic").build();
+        User user1 = User.builder().firstName("Idil").lastName("Kasuto Kelson").email("idil@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1972, 11, 29)).picture("https://images.unsplash.com/photo-1619895862022-09114b41f16f").build();
+        User user2 = User.builder().firstName("Ido").lastName("Kelson").email("ido@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1971, 9, 25)).picture("https://images.unsplash.com/photo-1603415526960-f7e0328c63b1").build();
+        User user3 = User.builder().firstName("Eithan").lastName("Kelson").email("eithan@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2002, 9, 13)).picture("https://images.unsplash.com/photo-1457449940276-e8deed18bfff").build();
         User user4 = User.builder().firstName("Ben").lastName("Kelson").email("ben@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2006, 12, 10)).picture("BenPic").build();
         User user5 = User.builder().firstName("Moshe").lastName("Cohen").email("moshe@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1948, 5, 14)).picture("MoshePic").build();
 
@@ -60,7 +60,7 @@ public class InitUserPost implements CommandLineRunner {
         user1.setFriends(user1Friends);
         userRepository.saveAndFlush(user1);
 
-        Post newPost1 = Post.builder().user(user1).title("My vacation in Rome").picture("RomePic").story("We are having a great time").time(LocalDateTime.now().minusDays(20)).build();
+        Post newPost1 = Post.builder().user(user1).title("My vacation in Venice").picture("https://i.imgur.com/f5md403.jpg").story("We are having a great time").time(LocalDateTime.now().minusDays(20)).build();
         postRepository.save(newPost1);
 //        user1 = userRepository.findById(1L).orElseThrow();
 //        List<Post> userPosts = new ArrayList<>(user1.getPosts());
@@ -68,13 +68,13 @@ public class InitUserPost implements CommandLineRunner {
 //        user1.setPosts(userPosts);
 //        userRepository.saveAndFlush(user1);
 
-        Post newPost2 = Post.builder().user(user1).title("My vacation in Paris").picture("ParisPic").story("Paris is beautiful").time(LocalDateTime.now().minusDays(2)).build();
+        Post newPost2 = Post.builder().user(user1).title("My vacation in Paris").picture("https://i.imgur.com/HdJRCRq.jpg").story("Paris is beautiful").time(LocalDateTime.now().minusDays(2)).build();
         postRepository.save(newPost2);
 
-        Post newPost3 = Post.builder().user(user3).title("My cakes").picture("CakePic").story("I baked a delicious cake").time(LocalDateTime.now().minusHours(3)).build();
+        Post newPost3 = Post.builder().user(user3).title("My cakes").picture("https://images.unsplash.com/photo-1602351447937-745cb720612f").story("I baked a delicious cake").time(LocalDateTime.now().minusHours(3)).build();
         postRepository.save(newPost3);
 
-        Post newPost5 = Post.builder().user(user5).title("I love Israel").picture("IsraelPic").story("We have a beautiful country").time(LocalDateTime.now().minusMonths(2).minusSeconds(15)).build();
+        Post newPost5 = Post.builder().user(user5).title("I love Israel").picture("https://i.imgur.com/WkBkr16.jpg").story("We have a beautiful country").time(LocalDateTime.now().minusMonths(2).minusSeconds(15)).build();
         postRepository.save(newPost5);
 
         System.out.println("~~~~~");

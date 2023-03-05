@@ -15,11 +15,11 @@ public class RegisterRequest {
     private String firstName;
 
     private String lastName;
+    private LocalDate dob;
     @Email
     private String email;
     @Length(min = 4, max = 12)
     private String password;
 
-    private LocalDate dob;
 
 }

@@ -1,6 +1,5 @@
 package com.jb.MySocialNetwork.security;
 
-import com.jb.MySocialNetwork.enums.UserType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,5 +18,5 @@ public class LoginRequest {
     @Length(min = 4, max = 12)
     private String password;
 
-    private UserType type;
+    //private UserType type;
 }

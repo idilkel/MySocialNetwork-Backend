@@ -1,7 +1,6 @@
 package com.jb.MySocialNetwork.controllers;
 
 import com.jb.MySocialNetwork.beans.User;
-import com.jb.MySocialNetwork.enums.UserType;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkSecurityException;
 import com.jb.MySocialNetwork.security.LoginManager;
 import com.jb.MySocialNetwork.security.LoginRequest;
@@ -38,8 +37,9 @@ public class WelcomeController {
     public LoginResponse login(@Valid @RequestBody LoginRequest loginRequest) throws SocialNetworkSecurityException {
         String email = loginRequest.getEmail();
         String password = loginRequest.getPassword();
-        UserType type = loginRequest.getType();
+        //UserType type = loginRequest.getType();
         UUID token = loginManager.login(email, password);
-        return new LoginResponse(token, email, type);
+        //return new LoginResponse(token, email, type);
+        return new LoginResponse(token, email);
     }
 }
