@@ -1,11 +1,9 @@
 package com.jb.MySocialNetwork.service;
 
-import com.jb.MySocialNetwork.beans.Like;
 import com.jb.MySocialNetwork.beans.Post;
 import com.jb.MySocialNetwork.beans.User;
 import com.jb.MySocialNetwork.exceptions.ErrMsg;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
-import com.jb.MySocialNetwork.repos.LikesRepository;
 import com.jb.MySocialNetwork.repos.PostRepository;
 import com.jb.MySocialNetwork.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +19,6 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final LikesRepository likesRepository;
-
 
     @Override
     public long addFriend(long userId, long newFriendId) throws SocialNetworkException {
@@ -126,29 +122,21 @@ public class UserServiceImpl implements UserService {
         return postRepository.findById(postId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
     }
 
-//    @Override
-//    public void increaseLike(long userId, Post post) {
-//        post.setLikes(post.getLikes() + 1);
-//
-//    }
 
     @Override
-    public void increaseLike(long userId, Post post) {
-        boolean isLikeExists = false;
-        if (likesRepository.likeExists(userId, post.getId()) == 1) {
-            isLikeExists = true;
+    public void increaseLike(long userId, Post post) throws SocialNetworkException {
+        int likes = post.getLikes();
+        List<User> likeUserList = post.getLikeUsersList();
+        User currentUser = userRepository.findById(userId).orElseThrow(() ->
+                new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION)
+        );
+        if (likeUserList.contains(currentUser)) {
+            return;
         }
-        System.out.println(isLikeExists);
-        if (!isLikeExists) {
-            List<Like> likeList = post.getLikesList();
-            System.out.println(likeList);
-            Like newLike = Like.builder().likingUserId(userId).post(post).build();
-            likeList.add(newLike);
-            likesRepository.save(newLike);
-            post.setLikes(post.getLikes() + 1);
-            post.setLikesList(likeList);
-            System.out.println(post);
-            postRepository.saveAndFlush(post);
-        }
+        likes++;
+        likeUserList.add(currentUser);
+        post.setLikes(likes);
+        post.setLikeUsersList(likeUserList);
+        postRepository.saveAndFlush(post);
     }
 }
