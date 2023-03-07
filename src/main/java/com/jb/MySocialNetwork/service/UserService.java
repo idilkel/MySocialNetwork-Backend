@@ -30,5 +30,5 @@ public interface UserService {
 
     Post getOnePostByPostId(long userId, long postId) throws SocialNetworkException;
 
-    void increaseLike(long userId, Post post);
+    void increaseLike(long userId, Post post) throws SocialNetworkException;
 }

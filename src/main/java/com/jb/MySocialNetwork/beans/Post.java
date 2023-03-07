@@ -36,10 +36,10 @@ public class Post {
 
     private int likes = 0;
 
-    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "post")
+    @ManyToMany(cascade = CascadeType.PERSIST)
 //    @ToString.Exclude
     @JsonIgnore
-    private List<Like> likesList = new ArrayList<>();
+    private List<User> likeUsersList = new ArrayList<>();
 
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "post")
