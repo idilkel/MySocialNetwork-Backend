@@ -39,11 +39,20 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //            "where uf.user_id=?1 order by time desc", nativeQuery = true)
 //    List<Post> getAllMyFriendsPostsDescTimeLimit10(Long userId, Pageable pageable);
 
-    @Query(value = "SELECT * FROM `my-social-network`.users_friends uf\n" +
-            "join `my-social-network`.posts p \n" +
-            "on uf.friends_id=p.user_id\n" +
-            "where uf.friends_id=:userId order by time desc", nativeQuery = true)
+//    This query gives double results - corrected below
+//    @Query(value = "SELECT * FROM `my-social-network`.users_friends uf\n" +
+//            "join `my-social-network`.posts p \n" +
+//            "on uf.friends_id=p.user_id\n" +
+//            "where uf.friends_id=:userId order by time desc", nativeQuery = true)
+//    List<Post> getAllMyFriendsPostsDescTimeLimit10(@Param("userId") long userId, Pageable pageable);
+
+    @Query(value = "SELECT distinct p.id, p.likes, p.picture, p.story, p.time, p.title, p.user_id \n" +
+            "FROM `my-social-network`.users_friends uf\n" +
+            "            join `my-social-network`.posts p \n" +
+            "            on uf.friends_id=p.user_id\n" +
+            "            where uf.friends_id=:userId  order by time desc", nativeQuery = true)
     List<Post> getAllMyFriendsPostsDescTimeLimit10(@Param("userId") long userId, Pageable pageable);
+
 
     @Query(value = "SELECT user_id FROM `my-social-network`.posts where id=?1", nativeQuery = true)
     long getUserIdOfPost(long postId);

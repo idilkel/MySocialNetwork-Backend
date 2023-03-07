@@ -52,7 +52,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<Post> getAllMyFriendsPostsDescTimeLimit10(long userId) {
         Pageable pageable = PageRequest.of(0, 10);
-        return postRepository.getAllMyFriendsPostsDescTimeLimit10(userId, pageable);
+        List<Post> posts = postRepository.getAllMyFriendsPostsDescTimeLimit10(userId, pageable);
+        System.out.println("~~~Get all my friends posts by time~~~");
+        posts.forEach(System.out::println);
+        return posts;
     }
 
     @Override
