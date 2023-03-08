@@ -56,5 +56,8 @@ public class TestService implements CommandLineRunner {
         commentService.getAllComments(6L).forEach(System.out::println);
         System.out.println("~~All comments of post#2~~~");
         commentService.getAllCommentsOfOnePost(6L, 1L).forEach(System.out::println);
+
+        System.out.println("---Not My friends----");
+        userService.getFiveNotMyFriendsWithFiveOffset(2L, 0);
     }
 }

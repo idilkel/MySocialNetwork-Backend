@@ -115,4 +115,39 @@ public class UserController {
         userService.increaseLike(userId, post);
     }
 
+    @GetMapping("/first-five")
+    List<User> getFiveUsers(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return userService.getFiveUsers(userId);
+    }
+
+    @GetMapping("/next-five/{offset}")
+    List<User> getNextFiveUsers(@RequestHeader("Authorization") UUID token, @PathVariable int offset) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return userService.getFiveUsersWithFiveOffset(userId, offset);
+    }
+
+    @GetMapping("/meet/first-five")
+    List<User> getNonFriends(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return userService.getFiveNotMyFriends(userId);
+    }
+
+    @GetMapping("/meet/next-five/{offset}")
+    List<User> getNextFiveNonFriends(@RequestHeader("Authorization") UUID token, @PathVariable int offset) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return userService.getFiveNotMyFriendsWithFiveOffset(userId, offset);
+    }
+
+    @GetMapping("/friends/first-five")
+    List<User> getFiveFriends(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return userService.getFiveFriends(userId);
+    }
+
+    @GetMapping("/friends/next-five/{offset}")
+    List<User> getNextFiveFriends(@RequestHeader("Authorization") UUID token, @PathVariable int offset) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return userService.getFiveFriendsWithFiveOffset(userId, offset);
+    }
 }

@@ -31,32 +31,39 @@ public class InitUserPost implements CommandLineRunner {
         User user1 = User.builder().firstName("Idil").lastName("Kasuto Kelson").email("idil@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1972, 11, 29)).picture("https://images.unsplash.com/photo-1619895862022-09114b41f16f").build();
         User user2 = User.builder().firstName("Ido").lastName("Kelson").email("ido@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1971, 9, 25)).picture("https://images.unsplash.com/photo-1603415526960-f7e0328c63b1").build();
         User user3 = User.builder().firstName("Eithan").lastName("Kelson").email("eithan@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2002, 9, 13)).picture("https://images.unsplash.com/photo-1457449940276-e8deed18bfff").build();
-        User user4 = User.builder().firstName("Ben").lastName("Kelson").email("ben@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2006, 12, 10)).picture("BenPic").build();
-        User user5 = User.builder().firstName("Moshe").lastName("Cohen").email("moshe@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1948, 5, 14)).picture("MoshePic").build();
+        User user4 = User.builder().firstName("Ben").lastName("Kelson").email("ben@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2006, 12, 10)).picture("https://images.unsplash.com/photo-1552374196-c4e7ffc6e126").build();
+        User user5 = User.builder().firstName("Moshe").lastName("Cohen").email("moshe@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1948, 5, 14)).picture("https://images.unsplash.com/photo-1504257432389-52343af06ae3").build();
+        User user6 = User.builder().firstName("Jonathan").lastName("Moor").email("jonathan@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1997, 2, 28)).picture("https://images.unsplash.com/photo-1506794778202-cad84cf45f1d").build();
+        User user7 = User.builder().firstName("Yana").lastName("Kolog").email("yana@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2001, 7, 12)).picture("https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e").build();
 
 
         //Arrays.asList is an unmodifiable collection = java.util.ImmutableCollections.uoe exception
         //If added with Arrays.asList - new List should be prepared on modification
         user2.setFriends(Arrays.asList(user1, user3));
+        user2.setNumberOfFriends(user2.getNumberOfFriends() + 2);
         //user1.setFriends(List.of(user2));
         List<User> user1Friends = new ArrayList<>();
         user1Friends.add(user2);
         user1.setFriends(user1Friends);
+        user1.setNumberOfFriends(user1.getNumberOfFriends() + 1);
         System.out.println("*");
 
         user3.setFriends(List.of(user2));
-        userRepository.saveAll(Arrays.asList(admin, user1, user2, user3, user4, user5));
+        user3.setNumberOfFriends(user3.getNumberOfFriends() + 1);
+        userRepository.saveAll(Arrays.asList(admin, user1, user2, user3, user4, user5, user6, user7));
 
         System.out.println(user4);
         List<User> user4Friends = new ArrayList<>(user4.getFriends());
         System.out.println("User4Friends: " + user4Friends);
         user4Friends.add(user1);
+        user4.setNumberOfFriends(user4.getNumberOfFriends() + 1);
         System.out.println("User4Friends: " + user4Friends);
         user4.setFriends(user4Friends);
         userRepository.saveAndFlush(user4);
 
         List userFriends = user1.getFriends();
         userFriends.add(user4);
+        user1.setNumberOfFriends(user1.getNumberOfFriends() + 1);
         user1.setFriends(user1Friends);
         userRepository.saveAndFlush(user1);
 

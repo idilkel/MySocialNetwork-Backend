@@ -31,4 +31,17 @@ public interface UserService {
     Post getOnePostByPostId(long userId, long postId) throws SocialNetworkException;
 
     void increaseLike(long userId, Post post) throws SocialNetworkException;
+
+    List<User> getFiveUsers(long userId);
+
+    List<User> getFiveUsersWithFiveOffset(long userId, int offset);
+
+    List<User> getFiveNotMyFriends(long userId);
+
+    List<User> getFiveNotMyFriendsWithFiveOffset(long userId, int offset);
+
+    List<User> getFiveFriends(long userId);
+
+    List<User> getFiveFriendsWithFiveOffset(long userId, int offset);
+
 }
