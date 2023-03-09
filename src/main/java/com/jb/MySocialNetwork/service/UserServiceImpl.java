@@ -4,6 +4,7 @@ import com.jb.MySocialNetwork.beans.Post;
 import com.jb.MySocialNetwork.beans.User;
 import com.jb.MySocialNetwork.exceptions.ErrMsg;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
+import com.jb.MySocialNetwork.models.Counts;
 import com.jb.MySocialNetwork.repos.PostRepository;
 import com.jb.MySocialNetwork.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -82,17 +83,6 @@ public class UserServiceImpl implements UserService {
         return postRepository.getUserIdOfPost(postId);
     }
 
-    @Override
-    public Post addNewPost(long userId, Post post) throws SocialNetworkException {
-        User user = userRepository.findById(userId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
-        post.setUser(user);
-        //The posts are in the posts-repository, and we don't need them additionally in the user-repository
-//        List<Post> posts = user.getPosts();
-//        posts.add(post);
-//        user.setPosts(posts);
-        postRepository.save(post);
-        return post;
-    }
 
     @Override
     public User getUserByMail(long userId, String email) throws SocialNetworkException {
@@ -167,5 +157,37 @@ public class UserServiceImpl implements UserService {
     public List<User> getFiveFriendsWithFiveOffset(long userId, int offset) {
         List<User> users = userRepository.myFriends(offset, userId);
         return users;
+    }
+
+//    @Override
+//    public int numberOfFriendsPosts(long userId) {
+//        return userRepository.numberOfFriendsPosts(userId);
+//    }
+//
+//    @Override
+//    public int numberOfFriends(long userId) {
+//        return userRepository.numberOfFriends(userId);
+//    }
+//
+//    @Override
+//    public int numberOfNonFriends(long userId) {
+//        return userRepository.numberOfNonFriends(userId);
+//    }
+//
+//    @Override
+//    public int numberOfTotalUsers(long userId) {
+//        return userRepository.numberOfAllUsers();
+//    }
+
+    @Override
+    public Counts counts(long userId) {
+        List<Integer> numberOfTotalUsers = userRepository.numberOfAllUsers();
+        System.out.println(numberOfTotalUsers);
+        List<Integer> numberOfFriendsPosts = userRepository.numberOfFriendsPosts(userId);
+        System.out.println(numberOfFriendsPosts);
+        List<Integer> numberOfFriends = userRepository.numberOfFriends(userId);
+        System.out.println(numberOfFriends);
+        Counts counts = new Counts(numberOfFriends.get(0), numberOfFriendsPosts.get(0), numberOfTotalUsers.get(0));
+        return counts;
     }
 }

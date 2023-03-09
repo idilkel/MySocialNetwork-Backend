@@ -3,6 +3,7 @@ package com.jb.MySocialNetwork.service;
 import com.jb.MySocialNetwork.beans.Post;
 import com.jb.MySocialNetwork.beans.User;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
+import com.jb.MySocialNetwork.models.Counts;
 
 import java.util.List;
 
@@ -17,7 +18,6 @@ public interface UserService {
 
     long getPostUserId(long userId, long postId);
 
-    Post addNewPost(long userId, Post post) throws SocialNetworkException;
 
     User getUserByMail(long userId, String email) throws SocialNetworkException;
 
@@ -41,5 +41,13 @@ public interface UserService {
 
     List<User> getFiveFriendsWithFiveOffset(long userId, int offset);
 
+//    int numberOfFriendsPosts(long userId);
+//
+//    int numberOfFriends(long userId);
+//
+//    int numberOfNonFriends(long userId);
+//
+//    int numberOfTotalUsers(long userId);
 
+    Counts counts(long userId);
 }

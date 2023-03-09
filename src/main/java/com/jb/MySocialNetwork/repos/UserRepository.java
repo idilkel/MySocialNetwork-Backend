@@ -42,10 +42,41 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> notMyFriends(@Param("offset") int offset, @Param("id") long id);
 
 
-    @Query(value = "SELECT id, dob, email, first_name, last_name, number_of_friends, password, picture, type FROM `my-social-network`.users_friends uf\n" +
+    @Query(value = "SELECT id, dob, email, first_name, last_name, number_of_friends, number_of_posts, password, picture, type FROM `my-social-network`.users_friends uf\n" +
             "join `my-social-network`.users u\n" +
             "on uf.friends_id=u.id\n" +
             "where user_id=:id \n" +
             "limit 5 offset :offset", nativeQuery = true)
     List<User> myFriends(@Param("offset") int offset, @Param("id") long id);
+
+
+    @Transactional
+    @Modifying
+    @Query(value = "SELECT COUNT(*) FROM (SELECT id FROM `my-social-network`.users_friends uf\n" +
+            "join `my-social-network`.users u\n" +
+            "on uf.friends_id=u.id\n" +
+            "where user_id=:id) as friends", nativeQuery = true)
+    List<Integer> numberOfFriends(@Param("id") long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "SELECT COUNT(*) FROM (SELECT * FROM `my-social-network`.users\n" +
+            "where id not in(SELECT id FROM `my-social-network`.users_friends uf\n" +
+            "join `my-social-network`.users u\n" +
+            "on uf.friends_id=u.id\n" +
+            "where user_id=:id) and id!=:id and id!=1) as nonFriends;", nativeQuery = true)
+    List<Integer> numberOfNonFriends(@Param("id") long id);
+
+    @Transactional
+    @Modifying
+    @Query(value = "SELECT COUNT(*) FROM (SELECT * FROM `my-social-network`.users) as totalUsers;", nativeQuery = true)
+    List<Integer> numberOfAllUsers();
+
+    @Transactional
+    @Modifying
+    @Query(value = "SELECT COUNT(*) FROM (SELECT * FROM `my-social-network`.posts where user_id in (SELECT id FROM `my-social-network`.users_friends uf\n" +
+            "join `my-social-network`.users u\n" +
+            "on uf.friends_id=u.id\n" +
+            "where user_id=:id )) as friendsPosts;", nativeQuery = true)
+    List<Integer> numberOfFriendsPosts(@Param("id") long id);
 }

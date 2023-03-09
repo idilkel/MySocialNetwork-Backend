@@ -35,15 +35,15 @@ public class UserController {
     }
 
     @GetMapping("/posts/mine")
-    List<Post> getAllMyPostsDescTimeLimit10(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
+    List<Post> getAllMyPostsDescTimeLimit5(@RequestHeader("Authorization") UUID token, @RequestParam(value = "page", required = false) int pageNumber) throws SocialNetworkSecurityException {
         long userId = tokenManager.getUserId(token);
-        return postService.getAllMyPostsDescTimeLimit10(userId);
+        return postService.getAllMyPostsDescTimeLimit5(pageNumber, userId);
     }
 
     @GetMapping("/posts/friends")
-    List<Post> getAllMyFriendsPostsDescTimeLimit10(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
+    List<Post> getAllMyFriendsPostsDescTimeLimit5(@RequestHeader("Authorization") UUID token, @RequestParam(value = "page", required = false) int pageNumber) throws SocialNetworkSecurityException {
         long userId = tokenManager.getUserId(token);
-        return postService.getAllMyFriendsPostsDescTimeLimit10(userId);
+        return postService.getAllMyFriendsPostsDescTimeLimit5(pageNumber, userId);
     }
 
     @DeleteMapping("/friendship")
@@ -63,7 +63,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     Post addNewPost(@RequestHeader("Authorization") UUID token, @RequestBody Post post) throws SocialNetworkSecurityException, SocialNetworkException {
         long userId = tokenManager.getUserId(token);
-        userService.addNewPost(userId, post);
+        postService.addNewPost(userId, post);
         return post;
     }
 

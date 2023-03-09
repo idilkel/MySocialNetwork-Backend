@@ -33,7 +33,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //    List<Post> getAllMyFriendsPostsDescTimeLimit10(Long userId);
 
     @Query(value = "SELECT * FROM `my-social-network`.posts where user_id=?1 order by time desc", nativeQuery = true)
-    List<Post> getAllMyPostsDescTimeLimit10(Long userId, Pageable pageable);
+    List<Post> getAllMyPostsDescTimeLimit5(Long userId, Pageable pageable);
 
 //    @Query(value = "SELECT id,picture,story,time,title,friends_id as user_id FROM `my-social-network`.users_friends uf\n" +
 //            "join `my-social-network`.posts p \n" +
@@ -48,13 +48,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 //            "where uf.friends_id=:userId order by time desc", nativeQuery = true)
 //    List<Post> getAllMyFriendsPostsDescTimeLimit10(@Param("userId") long userId, Pageable pageable);
 
-    @Query(value = "SELECT distinct p.id, p.likes, p.picture, p.story, p.time, p.title, p.user_id \n" +
-            "FROM `my-social-network`.users_friends uf\n" +
-            "            join `my-social-network`.posts p \n" +
-            "            on uf.friends_id=p.user_id\n" +
-            "            where uf.friends_id=:userId  order by time desc", nativeQuery = true)
-    List<Post> getAllMyFriendsPostsDescTimeLimit10(@Param("userId") long userId, Pageable pageable);
-
+    @Query(value = "SELECT * FROM `my-social-network`.posts where user_id in (SELECT id FROM `my-social-network`.users_friends uf\n" +
+            "            join `my-social-network`.users u\n" +
+            "           on uf.friends_id=u.id\n" +
+            "            where user_id=:userId)  order by time desc", nativeQuery = true)
+    List<Post> getAllMyFriendsPostsDescTimeLimit5(@Param("userId") long userId, Pageable pageable);
 
     @Query(value = "SELECT user_id FROM `my-social-network`.posts where id=?1", nativeQuery = true)
     long getUserIdOfPost(long postId);

@@ -35,6 +35,10 @@ public class InitUserPost implements CommandLineRunner {
         User user5 = User.builder().firstName("Moshe").lastName("Cohen").email("moshe@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1948, 5, 14)).picture("https://images.unsplash.com/photo-1504257432389-52343af06ae3").build();
         User user6 = User.builder().firstName("Jonathan").lastName("Moor").email("jonathan@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1997, 2, 28)).picture("https://images.unsplash.com/photo-1506794778202-cad84cf45f1d").build();
         User user7 = User.builder().firstName("Yana").lastName("Kolog").email("yana@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2001, 7, 12)).picture("https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e").build();
+        User user8 = User.builder().firstName("Yael").lastName("Miler").email("yael@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2000, 4, 9)).picture("https://images.unsplash.com/photo-1531746020798-e6953c6e8e04").build();
+        User user9 = User.builder().firstName("Efrat").lastName("Kagan").email("efrat@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(1992, 5, 17)).picture("https://images.unsplash.com/photo-1531746020798-e6953c6e8e04").build();
+        User user10 = User.builder().firstName("Roni").lastName("Hadad").email("roni@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2003, 3, 5)).picture("https://images.unsplash.com/photo-1499996860823-5214fcc65f8f").build();
+        User user11 = User.builder().firstName("Ayelet").lastName("Levi").email("ayelet@gmail.com").password("1234").type(UserType.user).dob(LocalDate.of(2005, 8, 15)).picture("https://images.unsplash.com/photo-1438761681033-6461ffad8d80").build();
 
 
         //Arrays.asList is an unmodifiable collection = java.util.ImmutableCollections.uoe exception
@@ -50,7 +54,7 @@ public class InitUserPost implements CommandLineRunner {
 
         user3.setFriends(List.of(user2));
         user3.setNumberOfFriends(user3.getNumberOfFriends() + 1);
-        userRepository.saveAll(Arrays.asList(admin, user1, user2, user3, user4, user5, user6, user7));
+        userRepository.saveAll(Arrays.asList(admin, user1, user2, user3, user4, user5, user6, user7, user8, user9, user10, user11));
 
         System.out.println(user4);
         List<User> user4Friends = new ArrayList<>(user4.getFriends());
@@ -69,6 +73,9 @@ public class InitUserPost implements CommandLineRunner {
 
         Post newPost1 = Post.builder().user(user1).title("My vacation in Venice").picture("https://i.imgur.com/f5md403.jpg").story("We are having a great time").time(LocalDateTime.now().minusDays(20)).build();
         postRepository.save(newPost1);
+        user1 = userRepository.findById(2L).orElseThrow();
+        user1.setNumberOfPosts(user1.getNumberOfPosts() + 1);
+        userRepository.saveAndFlush(user1);
 //        user1 = userRepository.findById(1L).orElseThrow();
 //        List<Post> userPosts = new ArrayList<>(user1.getPosts());
 //        userPosts.add(newPost1);
@@ -77,12 +84,21 @@ public class InitUserPost implements CommandLineRunner {
 
         Post newPost2 = Post.builder().user(user1).title("My vacation in Paris").picture("https://i.imgur.com/HdJRCRq.jpg").story("Paris is beautiful").time(LocalDateTime.now().minusDays(2)).build();
         postRepository.save(newPost2);
+        user1 = userRepository.findById(2L).orElseThrow();
+        user1.setNumberOfPosts(user1.getNumberOfPosts() + 1);
+        userRepository.saveAndFlush(user1);
 
         Post newPost3 = Post.builder().user(user3).title("My cakes").picture("https://images.unsplash.com/photo-1602351447937-745cb720612f").story("I baked a delicious cake").time(LocalDateTime.now().minusHours(3)).build();
         postRepository.save(newPost3);
+        user3 = userRepository.findById(4L).orElseThrow();
+        user3.setNumberOfPosts(user3.getNumberOfPosts() + 1);
+        userRepository.saveAndFlush(user3);
 
         Post newPost5 = Post.builder().user(user5).title("I love Israel").picture("https://i.imgur.com/WkBkr16.jpg").story("We have a beautiful country").time(LocalDateTime.now().minusMonths(2).minusSeconds(15)).build();
         postRepository.save(newPost5);
+        user5 = userRepository.findById(6L).orElseThrow();
+        user5.setNumberOfPosts(user5.getNumberOfPosts() + 1);
+        userRepository.saveAndFlush(user5);
 
         System.out.println("~~~~~");
         System.out.println(newPost1 + " " + newPost1.getUser().getId());
