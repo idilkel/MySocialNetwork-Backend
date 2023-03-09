@@ -3,10 +3,12 @@ package com.jb.MySocialNetwork.repos;
 import com.jb.MySocialNetwork.beans.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -56,4 +58,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query(value = "SELECT user_id FROM `my-social-network`.posts where id=?1", nativeQuery = true)
     long getUserIdOfPost(long postId);
+
+    @Transactional
+    @Modifying
+    @Query(value = "SELECT * FROM `my-social-network`.posts where user_id in (SELECT id FROM `my-social-network`.users_friends uf\n" +
+            "join `my-social-network`.users u\n" +
+            "on uf.friends_id=u.id\n" +
+            "where user_id=:userId )\n" +
+            "limit 5 offset :offset", nativeQuery = true)
+    List<Post> myFriendsPosts(@Param("offset") int offset, @Param("userId") long userId);
 }

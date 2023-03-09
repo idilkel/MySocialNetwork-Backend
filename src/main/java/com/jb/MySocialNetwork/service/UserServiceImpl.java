@@ -7,8 +7,6 @@ import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
 import com.jb.MySocialNetwork.repos.PostRepository;
 import com.jb.MySocialNetwork.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -46,20 +44,6 @@ public class UserServiceImpl implements UserService {
         return newFriendId;
     }
 
-    @Override
-    public List<Post> getAllMyPostsDescTimeLimit10(long userId) {
-        Pageable pageable = PageRequest.of(0, 10);
-        return postRepository.getAllMyPostsDescTimeLimit10(userId, pageable);
-    }
-
-    @Override
-    public List<Post> getAllMyFriendsPostsDescTimeLimit10(long userId) {
-        Pageable pageable = PageRequest.of(0, 10);
-        List<Post> posts = postRepository.getAllMyFriendsPostsDescTimeLimit10(userId, pageable);
-        System.out.println("~~~Get all my friends posts by time~~~");
-        posts.forEach(System.out::println);
-        return posts;
-    }
 
     @Override
     public void deleteFriend(long userId, long newFriendId) throws SocialNetworkException {

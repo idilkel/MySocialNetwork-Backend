@@ -10,9 +10,6 @@ public interface UserService {
 
     long addFriend(long userId, long newFriendId) throws SocialNetworkException;
 
-    List<Post> getAllMyPostsDescTimeLimit10(long userId);
-
-    List<Post> getAllMyFriendsPostsDescTimeLimit10(long userId);
 
     void deleteFriend(long userId, long newFriendId) throws SocialNetworkException;
 
@@ -20,7 +17,7 @@ public interface UserService {
 
     long getPostUserId(long userId, long postId);
 
-    Post addNewPost(long userId, Post pot) throws SocialNetworkException;
+    Post addNewPost(long userId, Post post) throws SocialNetworkException;
 
     User getUserByMail(long userId, String email) throws SocialNetworkException;
 
@@ -43,5 +40,6 @@ public interface UserService {
     List<User> getFiveFriends(long userId);
 
     List<User> getFiveFriendsWithFiveOffset(long userId, int offset);
+
 
 }

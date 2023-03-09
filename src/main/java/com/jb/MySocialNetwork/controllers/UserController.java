@@ -7,6 +7,7 @@ import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
 import com.jb.MySocialNetwork.exceptions.SocialNetworkSecurityException;
 import com.jb.MySocialNetwork.security.TokenManager;
 import com.jb.MySocialNetwork.service.CommentService;
+import com.jb.MySocialNetwork.service.PostService;
 import com.jb.MySocialNetwork.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class UserController {
     private final UserService userService;
     private final TokenManager tokenManager;
     private final CommentService commentService;
+    private final PostService postService;
 
 
     @PostMapping
@@ -35,13 +37,13 @@ public class UserController {
     @GetMapping("/posts/mine")
     List<Post> getAllMyPostsDescTimeLimit10(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
         long userId = tokenManager.getUserId(token);
-        return userService.getAllMyPostsDescTimeLimit10(userId);
+        return postService.getAllMyPostsDescTimeLimit10(userId);
     }
 
     @GetMapping("/posts/friends")
     List<Post> getAllMyFriendsPostsDescTimeLimit10(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
         long userId = tokenManager.getUserId(token);
-        return userService.getAllMyFriendsPostsDescTimeLimit10(userId);
+        return postService.getAllMyFriendsPostsDescTimeLimit10(userId);
     }
 
     @DeleteMapping("/friendship")
@@ -149,5 +151,17 @@ public class UserController {
     List<User> getNextFiveFriends(@RequestHeader("Authorization") UUID token, @PathVariable int offset) throws SocialNetworkSecurityException {
         long userId = tokenManager.getUserId(token);
         return userService.getFiveFriendsWithFiveOffset(userId, offset);
+    }
+
+    @GetMapping("/friends/posts/first-five")
+    List<Post> getFiveFriendsPosts(@RequestHeader("Authorization") UUID token) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return postService.getFiveMyFriendsPosts(userId);
+    }
+
+    @GetMapping("/friends/posts/next-five/{offset}")
+    List<Post> getNextFiveFriendsPosts(@RequestHeader("Authorization") UUID token, @PathVariable int offset) throws SocialNetworkSecurityException {
+        long userId = tokenManager.getUserId(token);
+        return postService.getFiveMyFriendsPostsOffset(userId, offset);
     }
 }
