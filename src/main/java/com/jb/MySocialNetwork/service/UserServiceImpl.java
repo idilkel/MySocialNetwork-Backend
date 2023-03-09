@@ -7,8 +7,6 @@ import com.jb.MySocialNetwork.exceptions.SocialNetworkException;
 import com.jb.MySocialNetwork.repos.PostRepository;
 import com.jb.MySocialNetwork.repos.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -19,6 +17,7 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+
 
     @Override
     public long addFriend(long userId, long newFriendId) throws SocialNetworkException {
@@ -31,29 +30,20 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
         User newFriend = userRepository.findById(newFriendId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
 
-        List userFriends = new ArrayList<>(user.getFriends());
+        List<User> userFriends = new ArrayList<>(user.getFriends());
         userFriends.add(newFriend);
         user.setFriends(userFriends);
+        user.setNumberOfFriends(userFriends.size());
         userRepository.saveAndFlush(user);
 
-        List newFriendFriends = new ArrayList<>(newFriend.getFriends());
+        List<User> newFriendFriends = new ArrayList<>(newFriend.getFriends());
         newFriendFriends.add(user);
+        newFriend.setNumberOfFriends(newFriendFriends.size());
         newFriend.setFriends(newFriendFriends);
         userRepository.saveAndFlush(newFriend);
         return newFriendId;
     }
 
-    @Override
-    public List<Post> getAllMyPostsDescTimeLimit10(long userId) {
-        Pageable pageable = PageRequest.of(0, 10);
-        return postRepository.getAllMyPostsDescTimeLimit10(userId, pageable);
-    }
-
-    @Override
-    public List<Post> getAllMyFriendsPostsDescTimeLimit10(long userId) {
-        Pageable pageable = PageRequest.of(0, 10);
-        return postRepository.getAllMyFriendsPostsDescTimeLimit10(userId, pageable);
-    }
 
     @Override
     public void deleteFriend(long userId, long newFriendId) throws SocialNetworkException {
@@ -66,13 +56,15 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
         User newFriend = userRepository.findById(newFriendId).orElseThrow(() -> new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION));
 
-        List userFriends = new ArrayList<>(user.getFriends());
+        List<User> userFriends = new ArrayList<>(user.getFriends());
         userFriends.remove(newFriend);
+        user.setNumberOfFriends(userFriends.size());
         user.setFriends(userFriends);
         userRepository.saveAndFlush(user);
 
-        List newFriendFriends = new ArrayList<>(newFriend.getFriends());
+        List<User> newFriendFriends = new ArrayList<>(newFriend.getFriends());
         newFriendFriends.remove(user);
+        newFriend.setNumberOfFriends(newFriendFriends.size());
         newFriend.setFriends(newFriendFriends);
         userRepository.saveAndFlush(newFriend);
     }
@@ -138,5 +130,42 @@ public class UserServiceImpl implements UserService {
         post.setLikes(likes);
         post.setLikeUsersList(likeUserList);
         postRepository.saveAndFlush(post);
+    }
+
+    @Override
+    public List<User> getFiveUsers(long userId) {
+        List<User> users = userRepository.getFiveUsersEachTime(0);
+        return users;
+    }
+
+    @Override
+    public List<User> getFiveUsersWithFiveOffset(long userId, int offset) {
+        List<User> users = userRepository.getFiveUsersEachTime(offset);
+        return users;
+    }
+
+    @Override
+    public List<User> getFiveNotMyFriends(long userId) {
+        List<User> users = userRepository.notMyFriends(0, userId);
+        return users;
+    }
+
+    @Override
+    public List<User> getFiveNotMyFriendsWithFiveOffset(long userId, int offset) {
+        List<User> users = userRepository.notMyFriends(offset, userId);
+        users.forEach(System.out::println);
+        return users;
+    }
+
+    @Override
+    public List<User> getFiveFriends(long userId) {
+        List<User> users = userRepository.myFriends(0, userId);
+        return users;
+    }
+
+    @Override
+    public List<User> getFiveFriendsWithFiveOffset(long userId, int offset) {
+        List<User> users = userRepository.myFriends(offset, userId);
+        return users;
     }
 }

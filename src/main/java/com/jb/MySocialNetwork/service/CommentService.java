@@ -11,4 +11,6 @@ public interface CommentService {
     List<Comment> getAllCommentsOfOnePost(long userId, long postId);
 
     Comment addComment(long userId, long postId, String msg) throws SocialNetworkException;
+
+
 }

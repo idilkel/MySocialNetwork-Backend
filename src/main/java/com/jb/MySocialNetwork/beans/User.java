@@ -53,5 +53,7 @@ public class User {
     @JsonIgnore
     private List<User> friends = new ArrayList<>();
 
+    private int numberOfFriends;
+
 
 }

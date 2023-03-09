@@ -2,8 +2,8 @@ package com.jb.MySocialNetwork.clr;
 
 import com.jb.MySocialNetwork.beans.Post;
 import com.jb.MySocialNetwork.beans.User;
-import com.jb.MySocialNetwork.repos.PostRepository;
 import com.jb.MySocialNetwork.service.CommentService;
+import com.jb.MySocialNetwork.service.PostService;
 import com.jb.MySocialNetwork.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TestService implements CommandLineRunner {
     private final UserService userService;
-    private final PostRepository postRepository;
+    private final PostService postService;
     private final CommentService commentService;
 
     @Override
@@ -26,11 +26,11 @@ public class TestService implements CommandLineRunner {
         userService.addFriend(3L, 5L);
         userService.addFriend(4L, 5L);
 
-        List<Post> user2Posts = userService.getAllMyPostsDescTimeLimit10(2L);
+        List<Post> user2Posts = postService.getAllMyPostsDescTimeLimit10(2L);
         user2Posts.forEach(System.out::println);
         System.out.println("------");
 
-        List<Post> user5FriendsPost = userService.getAllMyFriendsPostsDescTimeLimit10(5L);
+        List<Post> user5FriendsPost = postService.getAllMyFriendsPostsDescTimeLimit10(5L);
         user5FriendsPost.forEach(System.out::println);
         for (Post p : user5FriendsPost) {
             System.out.println(p);
@@ -56,5 +56,8 @@ public class TestService implements CommandLineRunner {
         commentService.getAllComments(6L).forEach(System.out::println);
         System.out.println("~~All comments of post#2~~~");
         commentService.getAllCommentsOfOnePost(6L, 1L).forEach(System.out::println);
+
+        System.out.println("---Not My friends----");
+        userService.getFiveNotMyFriendsWithFiveOffset(2L, 0);
     }
 }
