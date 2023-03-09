@@ -55,5 +55,6 @@ public class User {
 
     private int numberOfFriends;
 
+    private int numberOfPosts;
 
 }
