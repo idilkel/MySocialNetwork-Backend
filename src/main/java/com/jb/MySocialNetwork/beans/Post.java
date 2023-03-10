@@ -1,6 +1,8 @@
 package com.jb.MySocialNetwork.beans;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,11 +38,20 @@ public class Post {
 
     private int likes = 0;
 
-    @ManyToMany(cascade = CascadeType.PERSIST)
-//    @ToString.Exclude
-    @JsonIgnore
-    private List<User> likeUsersList = new ArrayList<>();
+//    @ManyToMany(mappedBy = "likeUsersList")
+////    @ToString.Exclude
+//    @JsonIgnore
+//    private List<User> likeUsersList = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "user_like",
+            joinColumns = @JoinColumn(name = "post_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
+//    @JsonManagedReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    @ToString.Exclude
+    private List<User> likeUsersList = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "post")
     @ToString.Exclude

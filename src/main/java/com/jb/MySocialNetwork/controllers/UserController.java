@@ -112,9 +112,10 @@ public class UserController {
 
     @PostMapping("/increase-like")
     @ResponseStatus(HttpStatus.CREATED)
-    void increaseLike(@RequestHeader("Authorization") UUID token, @RequestBody Post post) throws SocialNetworkSecurityException, SocialNetworkException {
+    Post increaseLike(@RequestHeader("Authorization") UUID token, @RequestBody Post post) throws SocialNetworkSecurityException, SocialNetworkException {
         long userId = tokenManager.getUserId(token);
-        userService.increaseLike(userId, post);
+        post = userService.increaseLike(userId, post);
+        return post;
     }
 
     @GetMapping("/first-five")
