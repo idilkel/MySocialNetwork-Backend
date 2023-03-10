@@ -106,5 +106,7 @@ public class InitUserPost implements CommandLineRunner {
         System.out.println(newPost3 + " " + newPost3.getUser().getId());
         System.out.println(newPost5 + " " + newPost5.getUser().getId());
         System.out.println("~~~~~");
+
+       
     }
 }

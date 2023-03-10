@@ -1,6 +1,8 @@
 package com.jb.MySocialNetwork.beans;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.jb.MySocialNetwork.enums.UserType;
 import lombok.*;
 import org.hibernate.validator.constraints.Length;
@@ -56,5 +58,12 @@ public class User {
     private int numberOfFriends;
 
     private int numberOfPosts;
+
+    @ManyToMany(mappedBy = "likeUsersList")
+    @JsonIgnore
+//    @JsonBackReference
+    @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+    private List<Post> likes = new ArrayList<>();
+
 
 }

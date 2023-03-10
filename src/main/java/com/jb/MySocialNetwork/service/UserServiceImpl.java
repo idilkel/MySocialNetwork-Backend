@@ -106,20 +106,57 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
-    public void increaseLike(long userId, Post post) throws SocialNetworkException {
-        int likes = post.getLikes();
-        List<User> likeUserList = post.getLikeUsersList();
+    public Post increaseLike(long userId, Post post) throws SocialNetworkException {
+        System.out.println("*1*");
         User currentUser = userRepository.findById(userId).orElseThrow(() ->
                 new SocialNetworkException(ErrMsg.ID_DOES_NOT_EXIST_EXCEPTION)
         );
-        if (likeUserList.contains(currentUser)) {
-            return;
+        System.out.println("*2*");
+        List<Post> userLikes = currentUser.getLikes();
+        System.out.println("*3*");
+        System.out.println("current user likes: " + userLikes);
+
+        System.out.println("*4*");
+        int likes = post.getLikes();
+
+        System.out.println("*5*");
+        List<User> likeUserList = post.getLikeUsersList();
+        System.out.println("*6*");
+        System.out.println(likeUserList);
+        boolean userIdExists = false;
+
+        for (int i = 0; i < likeUserList.size(); i++) {
+            System.out.println("*7*");
+            if (likeUserList.get(i).getId() == currentUser.getId()) {
+                System.out.println("*8*");
+                System.out.println("exists");
+                userIdExists = true;
+            }
         }
-        likes++;
-        likeUserList.add(currentUser);
-        post.setLikes(likes);
-        post.setLikeUsersList(likeUserList);
-        postRepository.saveAndFlush(post);
+//        if (likeUserList.contains(currentUser)) {
+//            System.out.println("exists");
+//            return null;
+//        }
+        if (!userIdExists) {
+            System.out.println("*9*");
+            likes++;
+            userLikes.add(post);
+            currentUser.setLikes(userLikes);
+            userRepository.saveAndFlush(currentUser);
+            System.out.println("*10*");
+            System.out.println("^^^");
+            System.out.println("updated likes of the user^^^" + userRepository.findById(currentUser.getId()).orElseThrow().getLikes());
+            System.out.println("^^^");
+            likeUserList.add(currentUser);
+            post.setLikes(likes);
+            post.setLikeUsersList(likeUserList);
+            System.out.println(post);
+            System.out.println("added!: " + likeUserList);
+            System.out.println("*11*");
+            postRepository.saveAndFlush(post);
+            return post;
+        }
+        return null;
     }
 
     @Override
