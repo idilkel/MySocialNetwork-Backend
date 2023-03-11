@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -56,8 +57,10 @@ public class PostServiceImpl implements PostService {
 //        List<Post> posts = user.getPosts();
 //        posts.add(post);
 //        user.setPosts(posts);
+        post.setTime(LocalDateTime.now());
         postRepository.save(post);
         userRepository.saveAndFlush(user);
+        System.out.println("new post: " + post);
         return post;
     }
 }
