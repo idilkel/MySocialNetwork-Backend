@@ -21,6 +21,7 @@ public class Comment {
 
     private LocalDateTime time;
 
+    @Column(nullable = false, length = 2000)
     private String message;
 
     @ManyToOne

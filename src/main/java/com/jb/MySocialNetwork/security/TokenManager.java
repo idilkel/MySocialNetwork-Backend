@@ -62,7 +62,14 @@ public class TokenManager {
         return information.getType();
     }
 
-    @Scheduled(fixedRate = 1000 * 60)
+    //Delete expired tokens every 30 minutes
+//    @Scheduled(fixedRate = 1000 * 60)
+//    public void deleteExpiredTokenOver30Minutes() {
+//        map.entrySet().removeIf(ins -> ins.getValue().getTime().isBefore(LocalDateTime.now().minusMinutes(30)));
+//    }
+
+    //at midnight remove all expired 30 min tokens which are not from the current day
+    @Scheduled(cron = "0 0 0 * * *", zone = "GMT+2.00")
     public void deleteExpiredTokenOver30Minutes() {
         map.entrySet().removeIf(ins -> ins.getValue().getTime().isBefore(LocalDateTime.now().minusMinutes(30)));
     }
